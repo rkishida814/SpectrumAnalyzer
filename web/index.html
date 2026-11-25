@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SpectrumAnalyzer</title>
+<link rel="stylesheet" href="style.css">
+<script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+</head>
+<body>
+<div id="engine-status" class="engine loading">Loading calculation engine (Python in your browser)… first load may take 10–20 s</div>
+
+<!-- Loader screen (ui/drag_drop_window.py) -->
+<section id="loader">
+  <div id="dropzone">
+    <p>Drag &amp; Drop<br>.txt or .csv XRD data here</p>
+    <label class="filebtn">or choose a file<input type="file" id="fileinput" accept=".txt,.csv"></label>
+    <p class="note">Your data is processed only in this browser and is never uploaded.</p>
+  </div>
+  <button id="btn-forward" hidden></button>
+</section>
+
+<!-- Main screen (ui/main_window.py) -->
+<section id="main" hidden>
+  <div class="toolbar">
+    <button id="btn-back">&larr; Back</button>
+    <span class="sep"></span>
+    <label>X Min: <input id="xmin" type="text" size="8"></label>
+    <label>X Max: <input id="xmax" type="text" size="8"></label>
+    <span class="sep"></span>
+    <button id="btn-orig">Original View</button>
+    <button id="btn-baseline" class="mode" data-mode="baseline">Baseline</button>
+    <button id="btn-integral">Integral</button>
+    <button id="btn-smooth" class="toggle">Smooth</button>
+    <span class="sep"></span>
+    <button id="btn-peak" class="mode" data-mode="peak_select">Select Peak</button>
+    <button id="btn-fwhm" class="mode" data-mode="fwhm">Est. FWHM</button>
+    <button id="btn-showfit" class="toggle on">Show Fit</button>
+    <span class="sep"></span>
+    <span id="mse">MSE: N/A</span>
+    <span id="filename"></span>
+  </div>
+  <div class="toolbar">
+    <button id="btn-clear">Clear All Peaks</button>
+    <span class="sep"></span>
+    <button id="btn-allfit">ALL Fit &#9881;</button>
+    <label>Profile:
+      <select id="profile">
+        <option value="pv">Pseudo-Voigt (common FWHM)</option>
+        <option value="tch">TCH pseudo-Voigt (separate G/L widths, advanced)</option>
+      </select>
+    </label>
+    <label>Algorithm:
+      <select id="algo"><option>trf</option><option>dogbox</option></select>
+    </label>
+    <label>Progress: <progress id="progress" value="0" max="1"></progress> <span id="progress-text"></span></label>
+  </div>
+
+  <div id="plotwrap">
+    <div id="plot"></div>
+    <canvas id="overlay"></canvas>
+  </div>
+
+  <div class="toolbar">
+    <label>Global G Fraction (0-1): <input id="global-g" type="text" size="5" value="0.8"></label>
+    <label>Global L Fraction (0-1): <input id="global-l" type="text" size="5" value="0.2"></label>
+    <button id="btn-apply-gl">Apply to All Peaks</button>
+  </div>
+  <div class="tablewrap">
+    <table id="peaks">
+      <thead><tr></tr></thead>
+      <tbody></tbody>
+    </table>
+  </div>
+</section>
+
+<div id="toast" hidden></div>
+<script src="app.js"></script>
+</body>
+</html>
