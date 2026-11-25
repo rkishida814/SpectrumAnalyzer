@@ -24,7 +24,7 @@ class DragDropWindow(QWidget):
         
         layout = QVBoxLayout(self)
         
-        self.label = QLabel("Drag & Drop \n.txt or .csv XRD data here")
+        self.label = QLabel("Drag & Drop \nXRD data here (.xy, .txt, .csv, ...)")
         self.label.setAlignment(Qt.AlignCenter)
         self.label.setStyleSheet("""
             QLabel {
@@ -46,7 +46,9 @@ class DragDropWindow(QWidget):
             urls = event.mimeData().urls()
             if len(urls) == 1:
                 filepath = urls[0].toLocalFile()
-                if filepath.lower().endswith(('.txt', '.csv')):
+                # Any two-column text file is accepted (.xy, .txt, .csv, .dat, ...);
+                # the parser reports an error if no numeric data is found.
+                if filepath and os.path.isfile(filepath):
                     event.acceptProposedAction()
                     self.label.setStyleSheet("""
                         QLabel {

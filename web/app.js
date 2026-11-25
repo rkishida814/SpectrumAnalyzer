@@ -137,7 +137,7 @@ $("fileinput").addEventListener("change", (e) => { const f = e.target.files[0]; 
 $("btn-forward").addEventListener("click", showMain);
 
 async function loadFile(file) {
-  if (!/\.(txt|csv)$/i.test(file.name)) { alert("Please choose a .txt or .csv file."); return; }
+  // 拡張子では断らない（.xy・.dat なども2列の数値なら読める）。数値が無ければ parse がエラーを返す
   if (!engineReady) { queuedFile = file; toast("Waiting for the calculation engine…"); return; }
   try {
     const bytes = await file.arrayBuffer();
